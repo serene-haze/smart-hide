@@ -25,5 +25,5 @@ mainFrame:SetScript("OnEvent", function(self, event, arg1)
         end
     end
 
-    addon.togglePlayerFrame();
+    addon.toggleFrames();
 end);

@@ -91,5 +91,5 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
     end
 
     -- trigger toggle frame logic to make sure new settings are applied
-    addon.togglePlayerFrame();
+    addon.toggleFrames();
 end

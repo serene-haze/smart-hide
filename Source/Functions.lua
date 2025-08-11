@@ -1,6 +1,13 @@
 local addonName, addon = ...;
 local P = "player";
 
+local additionalFrames = {
+    WarlockPowerFrame --TODO: Get names for all "detached power" frames
+}
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
 local function isHealthOutsideThreshold()
     local threshold = SmartHideOptions["health"];
     if threshold then
@@ -63,46 +70,87 @@ local function isCtrlHeld()
     end
 end
 
-local function showPlayerFrame()
-    PlayerFrame:SetAlpha(1);
-    if not PlayerFrame:IsMouseEnabled() then
-        PlayerFrame:EnableMouse(true);
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
+local function showFrames(frames)
+    for _, frame in ipairs(frames) do
+        if frame then
+            frame:SetAlpha(1);
+
+            if not frame:IsMouseEnabled() then
+                frame:EnableMouse(true);
+            end
+        end
     end
 end
 
-local function hidePlayerFrame()
+local function hideFrames(frames)
     local interactive = SmartHideOptions["interactive"] and true or false;
-    if not InCombatLockdown() then
-        PlayerFrame:EnableMouse(interactive);
+
+    for _, frame in ipairs(frames) do
+        if frame then
+            if not InCombatLockdown() then
+                frame:EnableMouse(interactive);
+            end
+
+            frame:SetAlpha(0);
+        end
     end
-    PlayerFrame:SetAlpha(0);
 end
 
-local function shouldShowPlayerFrame()
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 
-    -- show player frame if ctrl is held
+local function shouldShowAllFrames()
+
+    -- show if ctrl is held
     if isCtrlHeld() then return true; end
 
-    -- show player frame if in group
+    -- show if in group
     if isInGroup() then return true; end
 
-    -- show player frame if player has a target
+    -- show if player has a target
     if hasTarget() then return true; end
 
-    -- show player frame if player is in combat
+    -- show if player is in combat
     if UnitAffectingCombat(P) then return true; end
 
-    -- show player frame if player health is < 100%
+    -- otherwise, hide
+    return false;
+
+end
+
+local function shouldShowPlayerFrameOnly()
+
+    -- show if player health is < 100%
     if isHealthOutsideThreshold() then return true; end
 
-    -- show player frame if player power is < 100% (or > 0 if its a decaying power type, e.g. rage)
+    -- show if player power is < 100% (or > 0 if its a decaying power type, e.g. rage)
     if isPowerOutsideThreshold() then return true; end
 
-    -- show player frame if it is moused over
+    -- show if it is moused over
     if isMouseOverPlayerFrame() then return true; end
 
-    -- otherwise, hide the player frame
+    -- otherwise, hide
     return false;
+
+end
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
+local function reevaluateShownFrames()
+    if shouldShowAllFrames() then
+        showFrames({PlayerFrame});
+        showFrames(additionalFrames);
+    elseif shouldShowPlayerFrameOnly() then
+        showFrames({PlayerFrame});
+        hideFrames(additionalFrames);
+    else
+        hideFrames({PlayerFrame});
+        hideFrames(additionalFrames);
+    end
 end
 
 local function reevaluateMouseoverTimer()
@@ -114,11 +162,7 @@ local function reevaluateMouseoverTimer()
         -- Create one if we don't have one already
         if not addon.mouseoverTimer then
             addon.mouseoverTimer = C_Timer.NewTicker(0.10, function()
-                if shouldShowPlayerFrame() then
-                    showPlayerFrame();
-                else
-                    hidePlayerFrame();
-                end
+                reevaluateShownFrames()
             end)
         end
 
@@ -130,12 +174,7 @@ local function reevaluateMouseoverTimer()
     end
 end
 
-addon.togglePlayerFrame = function()
-    if shouldShowPlayerFrame() then
-        showPlayerFrame();
-    else
-        hidePlayerFrame();
-    end
-
+addon.toggleFrames = function()
+    reevaluateShownFrames()
     reevaluateMouseoverTimer()
 end
