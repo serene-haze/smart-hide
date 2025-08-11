@@ -9,6 +9,8 @@ mainFrame:RegisterEvent("PLAYER_LEAVE_COMBAT");
 mainFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 mainFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
 mainFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
+mainFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
+mainFrame:RegisterEvent("MODIFIER_STATE_CHANGED");
 mainFrame:RegisterUnitEvent("UNIT_HEALTH", "player");
 mainFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player");
 

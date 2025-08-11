@@ -36,6 +36,33 @@ local function isMouseOverPlayerFrame()
     end
 end
 
+local function hasTarget()
+    local target = SmartHideOptions["target"] and true or false;
+    if target and UnitExists("target") then
+        return true;
+    else
+        return false;
+    end
+end
+
+local function isInGroup()
+    local group = SmartHideOptions["group"] and true or false;
+    if group and IsInGroup() then
+        return true;
+    else
+        return false;
+    end
+end
+
+local function isCtrlHeld()
+    local ctrl = SmartHideOptions["ctrl"] and true or false;
+    if ctrl and IsControlKeyDown() then
+        return true;
+    else
+        return false;
+    end
+end
+
 local function showPlayerFrame()
     PlayerFrame:SetAlpha(1);
     if not PlayerFrame:IsMouseEnabled() then
@@ -52,8 +79,15 @@ local function hidePlayerFrame()
 end
 
 local function shouldShowPlayerFrame()
+
+    -- show player frame if ctrl is held
+    if isCtrlHeld() then return true; end
+
+    -- show player frame if in group
+    if isInGroup() then return true; end
+
     -- show player frame if player has a target
-    if UnitExists("target") then return true; end
+    if hasTarget() then return true; end
 
     -- show player frame if player is in combat
     if UnitAffectingCombat(P) then return true; end

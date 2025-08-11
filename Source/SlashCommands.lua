@@ -15,6 +15,33 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
             SmartHideOptions["interactive"] = false;
             print("Set interactive mode to |cff9ed4ffOFF");
         end
+    -- set target mode
+    elseif command == "target" then
+        if value == "on" then
+            SmartHideOptions["target"] = true;
+            print("Set target mode to |cff9ed4ffON");
+        elseif value == "off" then
+            SmartHideOptions["target"] = false;
+            print("Set target mode to |cff9ed4ffOFF");
+        end
+    -- set ctrl modifier mode
+    elseif command == "group" then
+        if value == "on" then
+            SmartHideOptions["group"] = true;
+            print("Set group mode to |cff9ed4ffON");
+        elseif value == "off" then
+            SmartHideOptions["group"] = false;
+            print("Set group mode to |cff9ed4ffOFF");
+        end
+    -- set ctrl modifier mode
+    elseif command == "ctrl" then
+        if value == "on" then
+            SmartHideOptions["ctrl"] = true;
+            print("Set ctrl modifier mode to |cff9ed4ffON");
+        elseif value == "off" then
+            SmartHideOptions["ctrl"] = false;
+            print("Set ctrl modifier mode to |cff9ed4ffOFF");
+        end
     -- set mouseover mode
     elseif command == "mouseover" then
         if value == "on" then
@@ -52,6 +79,9 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
     elseif command == "settings" then
         print("Player Frame Smart Hide settings:");
         print("Interactive mode: |cff9ed4ff" .. (SmartHideOptions["interactive"] and "ON" or "OFF"));
+        print("Target mode: |cff9ed4ff" .. (SmartHideOptions["target"] and "ON" or "OFF"));
+        print("Group mode: |cff9ed4ff" .. (SmartHideOptions["group"] and "ON" or "OFF"));
+        print("Ctrl modifier mode: |cff9ed4ff" .. (SmartHideOptions["ctrl"] and "ON" or "OFF"));
         print("Mouseover mode: |cff9ed4ff" .. (SmartHideOptions["mouseover"] and "ON" or "OFF"));
         print("Health threshold: |cff9ed4ff" .. (SmartHideOptions["health"] and tostring(SmartHideOptions["health"]) .. "%" or "OFF"));
         print("Power threshold: |cff9ed4ff" .. (SmartHideOptions["power"] and tostring(SmartHideOptions["power"]) .. "%" or "OFF"));
