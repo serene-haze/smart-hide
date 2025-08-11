@@ -17,8 +17,8 @@ mainFrame:SetScript("OnEvent", function(self, event, arg1)
     -- when the addon is loaded check if its SavedVariables exist
     if event == "ADDON_LOADED" and arg1 == addonName then
         -- if not then pre-populate them with the  defaults
-        if not PfshOptions then
-            PfshOptions = addon.defaults["options"];
+        if not SmartHideOptions then
+            SmartHideOptions = addon.defaults["options"];
             print("Player Frame Smart Hide loaded. Type \"\/playerframe help\" to see available options.");
         end
     end

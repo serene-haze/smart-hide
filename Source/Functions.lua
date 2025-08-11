@@ -2,7 +2,7 @@ local addonName, addon = ...;
 local P = "player";
 
 local function isHealthOutsideThreshold()
-    local threshold = PfshOptions["health"];
+    local threshold = SmartHideOptions["health"];
     if threshold then
         local hp = UnitHealth(P);
         local maxHP = UnitHealthMax(P);
@@ -14,7 +14,7 @@ local function isHealthOutsideThreshold()
 end
 
 local function isPowerOutsideThreshold()
-    local threshold = PfshOptions["power"];
+    local threshold = SmartHideOptions["power"];
     if threshold then
         local power = UnitPower(P);
         local maxPower = UnitPowerMax(P);
@@ -28,7 +28,7 @@ local function isPowerOutsideThreshold()
 end
 
 local function isMouseOverPlayerFrame()
-    local mouseover = PfshOptions["mouseover"] and true or false;
+    local mouseover = SmartHideOptions["mouseover"] and true or false;
     if mouseover and PlayerFrame:IsMouseOver() then
         return true;
     else
@@ -44,7 +44,7 @@ local function showPlayerFrame()
 end
 
 local function hidePlayerFrame()
-    local interactive = PfshOptions["interactive"] and true or false;
+    local interactive = SmartHideOptions["interactive"] and true or false;
     if not InCombatLockdown() then
         PlayerFrame:EnableMouse(interactive);
     end
@@ -78,7 +78,7 @@ addon.togglePlayerFrame = function()
         hidePlayerFrame();
     end
 
-    local mouseover = PfshOptions["mouseover"] and true or false;
+    local mouseover = SmartHideOptions["mouseover"] and true or false;
 
     if mouseover then
         C_Timer.NewTicker(0.10, function()
