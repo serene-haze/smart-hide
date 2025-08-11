@@ -1,0 +1,8 @@
+package-as: SmartHide
+
+move-folders:
+ SmartHide/Source: SmartHide
+
+ignore:
+ - LICENSE
+ - README.md
