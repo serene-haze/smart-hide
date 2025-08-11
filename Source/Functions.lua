@@ -71,6 +71,31 @@ local function shouldShowPlayerFrame()
     return false;
 end
 
+local function reevaluateMouseoverTimer()
+
+    local mouseover = SmartHideOptions["mouseover"] and true or false;
+
+    if mouseover then -- We need a timer
+
+        -- Create one if we don't have one already
+        if not addon.mouseoverTimer then
+            addon.mouseoverTimer = C_Timer.NewTicker(0.10, function()
+                if shouldShowPlayerFrame() then
+                    showPlayerFrame();
+                else
+                    hidePlayerFrame();
+                end
+            end)
+        end
+
+    elseif addon.mouseoverTimer then -- We don't need a timer but already have one - stop it
+
+        addon.mouseoverTimer:Cancel()
+        addon.mouseoverTimer = nil
+
+    end
+end
+
 addon.togglePlayerFrame = function()
     if shouldShowPlayerFrame() then
         showPlayerFrame();
@@ -78,15 +103,5 @@ addon.togglePlayerFrame = function()
         hidePlayerFrame();
     end
 
-    local mouseover = SmartHideOptions["mouseover"] and true or false;
-
-    if mouseover then
-        C_Timer.NewTicker(0.10, function()
-            if shouldShowPlayerFrame() then
-                showPlayerFrame();
-            else
-                hidePlayerFrame();
-            end
-        end)
-    end
+    reevaluateMouseoverTimer()
 end
