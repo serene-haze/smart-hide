@@ -34,9 +34,9 @@ local function isPowerOutsideThreshold()
     end
 end
 
-local function isMouseOverPlayerFrame()
+local function isMouseOverFrame(frame)
     local mouseover = SmartHideOptions["mouseover"] and true or false;
-    if mouseover and PlayerFrame:IsMouseOver() then
+    if frame and mouseover and frame:IsMouseOver() then
         return true;
     else
         return false;
@@ -121,7 +121,7 @@ local function shouldShowAllFrames()
 
 end
 
-local function shouldShowPlayerFrameOnly()
+local function shouldShowPlayerFrame()
 
     -- show if player health is < 100%
     if isHealthOutsideThreshold() then return true; end
@@ -130,26 +130,50 @@ local function shouldShowPlayerFrameOnly()
     if isPowerOutsideThreshold() then return true; end
 
     -- show if it is moused over
-    if isMouseOverPlayerFrame() then return true; end
+    if isMouseOverFrame(PlayerFrame) then return true; end
 
     -- otherwise, hide
     return false;
 
 end
 
+local function shouldShowPetFrame()
+
+    -- show if it is moused over
+    if isMouseOverFrame(PetFrame) then return true; end
+
+    -- otherwise, hide
+    return false;
+
+ end
+
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
 local function reevaluateShownFrames()
+
     if shouldShowAllFrames() then
+
         showFrames({PlayerFrame});
+        showFrames({PetFrame});
         showFrames(additionalFrames);
-    elseif shouldShowPlayerFrameOnly() then
-        showFrames({PlayerFrame});
-        hideFrames(additionalFrames);
+
     else
-        hideFrames({PlayerFrame});
+
+        if shouldShowPlayerFrame() then
+            showFrames({PlayerFrame});
+        else
+            hideFrames({PlayerFrame});
+        end
+
+        if shouldShowPetFrame() then
+            showFrames({PetFrame});
+        else
+            hideFrames({PetFrame});
+        end
+
         hideFrames(additionalFrames);
+
     end
 end
 
