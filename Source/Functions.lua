@@ -1,8 +1,10 @@
 local addonName, addon = ...;
 local P = "player";
 
+--TODO: Get names for all "detached power" frames
 local additionalFrames = {
-    WarlockPowerFrame --TODO: Get names for all "detached power" frames
+    WarlockPowerFrame,
+    RuneFrame
 }
 
 ------------------------------------------------------------------------------------------
