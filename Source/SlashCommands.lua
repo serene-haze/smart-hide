@@ -58,23 +58,23 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
             print("Show on player health threshold set to |cff9ed4ffOFF");
         else
             value = tonumber(value);
-            if value and value >= 0 and value <= 100 then
+            if value and value >= 1 and value <= 100 then
                 SmartHideOptions["health"] = value;
                 print("Set player frame to show when player health is below |cff9ed4ff" .. tostring(value) .. "%");
             end
         end
     -- set power threshold
-    elseif command == "power" then
-        if value == "off" then
-            SmartHideOptions["power"] = false;
-            print("Show on player power threshold set to |cff9ed4ffOFF");
-        else
-            value = tonumber(value);
-            if value and value >= 0 and value <= 100 then
-                SmartHideOptions["power"] = value;
-                print("Set player frame to show when player power is below (or above for rage-like types) |cff9ed4ff" .. tostring(value) .. "%");
-            end
-        end
+--     elseif command == "power" then
+--         if value == "off" then
+--             SmartHideOptions["power"] = false;
+--             print("Show on player power threshold set to |cff9ed4ffOFF");
+--         else
+--             value = tonumber(value);
+--             if value and value >= 1 and value <= 100 then
+--                 SmartHideOptions["power"] = value;
+--                 print("Set player frame to show when player power is below (or above for rage-like types) |cff9ed4ff" .. tostring(value) .. "%");
+--             end
+--         end
     -- display current setting values
     elseif command == "settings" then
         print("Player Frame Smart Hide settings:");
@@ -84,7 +84,7 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
         print("Ctrl modifier mode: |cff9ed4ff" .. (SmartHideOptions["ctrl"] and "ON" or "OFF"));
         print("Mouseover mode: |cff9ed4ff" .. (SmartHideOptions["mouseover"] and "ON" or "OFF"));
         print("Health threshold: |cff9ed4ff" .. (SmartHideOptions["health"] and tostring(SmartHideOptions["health"]) .. "%" or "OFF"));
-        print("Power threshold: |cff9ed4ff" .. (SmartHideOptions["power"] and tostring(SmartHideOptions["power"]) .. "%" or "OFF"));
+        --print("Power threshold: |cff9ed4ff" .. (SmartHideOptions["power"] and tostring(SmartHideOptions["power"]) .. "%" or "OFF"));
     -- show help text
     else
         print(addon.helpText);

@@ -1,7 +1,7 @@
-## Interface: 110200
+## Interface: 120000
 ## Title: SmartHide
 ## Author: Bill Dami (as Player Frame Smart Hide)
-## Version: 0.5.1
+## Version: 0.6.0
 
 ## SavedVariablesPerCharacter: SmartHideOptions
 

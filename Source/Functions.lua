@@ -10,31 +10,33 @@ local additionalFrames = {
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
-local function isHealthOutsideThreshold()
+-- UnitHealthPercent is now a secret value so we have to use this method to turn it into an alpha
+local function getAlphaForHealthThreshold()
     local threshold = SmartHideOptions["health"];
     if threshold then
-        local hp = UnitHealth(P);
-        local maxHP = UnitHealthMax(P);
-        local pct = (hp / maxHP) * 100;
-        return pct < threshold;
+        local curve = C_CurveUtil.CreateCurve();
+        local scaledThreshold = threshold / 100;
+        curve:AddPoint((scaledThreshold - 0.0000001), 1); -- 0.0000001 is the smallest subtracted value that results in different points at every threshold
+        curve:AddPoint( scaledThreshold, 0);
+        return UnitHealthPercent(P, false, curve);
     else
         return false;
     end
 end
 
-local function isPowerOutsideThreshold()
-    local threshold = SmartHideOptions["power"];
-    if threshold then
-        local power = UnitPower(P);
-        local maxPower = UnitPowerMax(P);
-        local pct = (power / maxPower) * 100;
-        local powerId, powerType = UnitPowerType(P);
-        local doesDecay = addon.decayPowerTypes[powerType];
-        return (doesDecay and pct > threshold) or (not doesDecay and pct < threshold);
-    else
-        return false;
-    end
-end
+-- local function isPowerOutsideThreshold()
+--     local threshold = SmartHideOptions["power"];
+--     if threshold then
+--         local power = UnitPower(P);
+--         local maxPower = UnitPowerMax(P);
+--         local pct = (power / maxPower) * 100;
+--         local powerId, powerType = UnitPowerType(P);
+--         local doesDecay = addon.decayPowerTypes[powerType];
+--         return (doesDecay and pct > threshold) or (not doesDecay and pct < threshold);
+--     else
+--         return false;
+--     end
+-- end
 
 local function isMouseOverFrame(frame)
     local mouseover = SmartHideOptions["mouseover"] and true or false;
@@ -75,28 +77,19 @@ end
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
-local function showFrames(frames)
+local function setFrameParameters(frames, alpha, interactiveEvenWhenHidden)
+
     for _, frame in ipairs(frames) do
         if frame then
-            frame:SetAlpha(1);
+            frame:SetAlpha(alpha);
 
-            if not frame:IsMouseEnabled() then
+            if interactiveEvenWhenHidden then
                 frame:EnableMouse(true);
+            elseif issecretvalue(alpha) then -- EnableMouse does not accept secret values - better to have a click-through frame than an interactable blank space?
+                frame:EnableMouse(false)     -- If mouseover mode is enabled for this frame, it will be clickable while the mouse is over it as that provides a non-secret visibility
+            else
+                frame:EnableMouse(alpha > 0);
             end
-        end
-    end
-end
-
-local function hideFrames(frames)
-    local interactive = SmartHideOptions["interactive"] and true or false;
-
-    for _, frame in ipairs(frames) do
-        if frame then
-            if not InCombatLockdown() then
-                frame:EnableMouse(interactive);
-            end
-
-            frame:SetAlpha(0);
         end
     end
 end
@@ -123,29 +116,26 @@ local function shouldShowAllFrames()
 
 end
 
-local function shouldShowPlayerFrame()
-
-    -- show if player health is < 100%
-    if isHealthOutsideThreshold() then return true; end
+local function getPlayerFrameSpecificAlpha()
 
     -- show if player power is < 100% (or > 0 if its a decaying power type, e.g. rage)
-    if isPowerOutsideThreshold() then return true; end
+    --if isPowerOutsideThreshold() then return 1; end
 
     -- show if it is moused over
-    if isMouseOverFrame(PlayerFrame) then return true; end
+    if isMouseOverFrame(PlayerFrame) then return 1; end
 
-    -- otherwise, hide
-    return false;
+    -- this alpha is secret
+    return getAlphaForHealthThreshold();
 
 end
 
-local function shouldShowPetFrame()
+local function getPetFrameSpecificAlpha()
 
     -- show if it is moused over
-    if isMouseOverFrame(PetFrame) then return true; end
+    if isMouseOverFrame(PetFrame) then return 1; end
 
     -- otherwise, hide
-    return false;
+    return 0;
 
  end
 
@@ -153,28 +143,19 @@ local function shouldShowPetFrame()
 ------------------------------------------------------------------------------------------
 
 local function reevaluateShownFrames()
+    local interactiveEvenWhenHidden = SmartHideOptions["interactive"] and true or false;
 
     if shouldShowAllFrames() then
 
-        showFrames({PlayerFrame});
-        showFrames({PetFrame});
-        showFrames(additionalFrames);
+        setFrameParameters({PlayerFrame}, 1, interactiveEvenWhenHidden);
+        setFrameParameters({PetFrame}, 1, interactiveEvenWhenHidden);
+        setFrameParameters(additionalFrames, 1, interactiveEvenWhenHidden);
 
     else
 
-        if shouldShowPlayerFrame() then
-            showFrames({PlayerFrame});
-        else
-            hideFrames({PlayerFrame});
-        end
-
-        if shouldShowPetFrame() then
-            showFrames({PetFrame});
-        else
-            hideFrames({PetFrame});
-        end
-
-        hideFrames(additionalFrames);
+        setFrameParameters({PlayerFrame}, getPlayerFrameSpecificAlpha(), interactiveEvenWhenHidden);
+        setFrameParameters({PetFrame},    getPetFrameSpecificAlpha(), interactiveEvenWhenHidden);
+        setFrameParameters(additionalFrames, 0, interactiveEvenWhenHidden);
 
     end
 end

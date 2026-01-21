@@ -12,7 +12,7 @@ mainFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
 mainFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 mainFrame:RegisterEvent("MODIFIER_STATE_CHANGED");
 mainFrame:RegisterUnitEvent("UNIT_HEALTH", "player");
-mainFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player");
+--mainFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player");
 
 -- addon entry point
 mainFrame:SetScript("OnEvent", function(self, event, arg1)
