@@ -3,6 +3,8 @@ local P = "player";
 
 --TODO: Get names for all "detached power" frames
 local additionalFrames = {
+    EssentialCooldownViewer,
+    UtilityCooldownViewer,
     WarlockPowerFrame,
     RuneFrame
 }
