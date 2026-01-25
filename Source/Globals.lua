@@ -13,15 +13,15 @@ addon.defaults = {
 };
 
 addon.helpText = [[
-Player Frame Smart Hide commands:
+Smart Hide commands:
 |cffeab517/smarthide help|r - Displays this list of commands
 |cffeab517/smarthide settings|r - Displays the currently set option values
-|cffeab517/smarthide interactive on|off|r |cffadadad(default: off)|r - Toggle player frame interactivity when hidden.
+|cffeab517/smarthide interactive on|off|r |cffadadad(default: off)|r - Toggle frame interactivity when hidden.
 |cffeab517/smarthide health 1-100|off|r |cffadadad(default: 100)|r - The player health % below which the player frame will be shown.
-|cffeab517/smarthide target on|off|r |cffadadad(default: off)|r - Show the player frame when the player has a target.
-|cffeab517/smarthide group on|off|r |cffadadad(default: off)|r - Show the player frame when in a group.
-|cffeab517/smarthide ctrl on|off|r |cffadadad(default: off)|r - Show the player frame when ctrl is held down.
-|cffeab517/smarthide mouseover on|off|r |cffadadad(default: off)|r - Show the player frame on mouseover.]];
+|cffeab517/smarthide target on|off|r |cffadadad(default: off)|r - Show player, pet, cooldown and separate power frames when the player has a target.
+|cffeab517/smarthide group on|off|r |cffadadad(default: off)|r - Show player, pet, cooldown and separate power frames when in a group.
+|cffeab517/smarthide ctrl on|off|r |cffadadad(default: off)|r - Show player, pet, cooldown and separate power frames when ctrl is held down.
+|cffeab517/smarthide mouseover on|off|r |cffadadad(default: off)|r - Show the player and pet frames on mouseover.]];
 -- |cffeab517/smarthide power 0-100|off|r |cffadadad(default: off)|r - The player power % below which (or above for rage-like power types) the player frame will be shown.
 
 -- https://wow.gamepedia.com/PowerType
