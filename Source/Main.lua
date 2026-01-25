@@ -1,11 +1,9 @@
 local addonName, addon = ...;
 
-local mainFrame = CreateFrame("FRAME", "pfshMain");
+local mainFrame = CreateFrame("FRAME", "shMain");
 mainFrame:RegisterEvent("ADDON_LOADED");
 mainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 mainFrame:RegisterEvent("PLAYER_LEAVING_WORLD");
-mainFrame:RegisterEvent("PLAYER_ENTER_COMBAT");
-mainFrame:RegisterEvent("PLAYER_LEAVE_COMBAT");
 mainFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 mainFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
 mainFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
@@ -25,5 +23,5 @@ mainFrame:SetScript("OnEvent", function(self, event, arg1)
         end
     end
 
-    addon.toggleFrames();
+    addon.reevaluateShownFrames();
 end);

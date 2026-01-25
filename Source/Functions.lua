@@ -88,7 +88,7 @@ local function setFrameParameters(frames, alpha, interactiveEvenWhenHidden)
             if interactiveEvenWhenHidden then
                 frame:EnableMouse(true);
             elseif issecretvalue(alpha) then -- EnableMouse does not accept secret values - better to have a click-through frame than an interactable blank space?
-                frame:EnableMouse(false)     -- If mouseover mode is enabled for this frame, it will be clickable while the mouse is over it as that provides a non-secret visibility
+                frame:EnableMouse(false);    -- If mouseover mode is enabled for this frame, it will be clickable while the mouse is over it as that provides a non-secret visibility
             else
                 frame:EnableMouse(alpha > 0);
             end
@@ -144,7 +144,35 @@ local function getPetFrameSpecificAlpha()
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
-local function reevaluateShownFrames()
+local function startMouseoverTimer()
+    -- Create one if we don't have one already
+    if not addon.mouseoverTimer then
+        addon.mouseoverTimer = C_Timer.NewTicker(0.10, function()
+            addon.reevaluateShownFrames();
+        end)
+    end
+end
+
+local function stopMouseoverTimer()
+    if addon.mouseoverTimer then -- We don't need a timer but already have one - stop it
+        addon.mouseoverTimer:Cancel();
+        addon.mouseoverTimer = nil;
+    end
+end
+
+addon.reevaluateShownFrames = function()
+
+    -- We can't change some frame settings (notably the mouse status of the player frame)
+    -- during the combat lockdown, but since we always show all frames during combat, we
+    -- might as well disable *all* condition checking in combat so as not to waste cycles.
+    -- The PLAYER_REGEN_DISABLED event just *before* the lockdown starts will serve to get
+    -- all the frames into combat state and the PLAYER_REGEN_ENABLED event just *after* the
+    -- lockdown is lifted will get them into whatever state they should be in out of combat.
+    --
+    if InCombatLockdown() then
+        return
+    end
+
     local interactiveEvenWhenHidden = SmartHideOptions["interactive"] and true or false;
 
     if shouldShowAllFrames() then
@@ -153,37 +181,20 @@ local function reevaluateShownFrames()
         setFrameParameters({PetFrame}, 1, interactiveEvenWhenHidden);
         setFrameParameters(additionalFrames, 1, interactiveEvenWhenHidden);
 
+        stopMouseoverTimer();
+
     else
 
         setFrameParameters({PlayerFrame}, getPlayerFrameSpecificAlpha(), interactiveEvenWhenHidden);
         setFrameParameters({PetFrame},    getPetFrameSpecificAlpha(), interactiveEvenWhenHidden);
         setFrameParameters(additionalFrames, 0, interactiveEvenWhenHidden);
 
-    end
-end
-
-local function reevaluateMouseoverTimer()
-
-    local mouseover = SmartHideOptions["mouseover"] and true or false;
-
-    if mouseover then -- We need a timer
-
-        -- Create one if we don't have one already
-        if not addon.mouseoverTimer then
-            addon.mouseoverTimer = C_Timer.NewTicker(0.10, function()
-                reevaluateShownFrames()
-            end)
+        local mouseover = SmartHideOptions["mouseover"] and true or false;
+        if mouseover then
+            startMouseoverTimer();
+        else
+            stopMouseoverTimer();
         end
 
-    elseif addon.mouseoverTimer then -- We don't need a timer but already have one - stop it
-
-        addon.mouseoverTimer:Cancel()
-        addon.mouseoverTimer = nil
-
     end
-end
-
-addon.toggleFrames = function()
-    reevaluateShownFrames()
-    reevaluateMouseoverTimer()
 end
