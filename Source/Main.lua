@@ -19,7 +19,7 @@ mainFrame:SetScript("OnEvent", function(self, event, arg1)
         -- if not then pre-populate them with the  defaults
         if not SmartHideOptions then
             SmartHideOptions = addon.defaults["options"];
-            print("Smart Hide loaded. Type \"\/playerframe help\" to see available options.");
+            print("Smart Hide loaded. Type \"\/smarthide\" to see available options.");
         end
     end
 
