@@ -154,7 +154,8 @@ local function startMouseoverTimer()
 end
 
 local function stopMouseoverTimer()
-    if addon.mouseoverTimer then -- We don't need a timer but already have one - stop it
+    -- We don't need a timer but already have one - stop it
+    if addon.mouseoverTimer then
         addon.mouseoverTimer:Cancel();
         addon.mouseoverTimer = nil;
     end

@@ -77,7 +77,7 @@ function SlashCmdList.SMARTHIDE(msg, editBox)
 --         end
     -- display current setting values
     elseif command == "settings" then
-        print("Player Frame Smart Hide settings:");
+        print("Smart Hide settings:");
         print("Interactive mode: |cff9ed4ff" .. (SmartHideOptions["interactive"] and "ON" or "OFF"));
         print("Target mode: |cff9ed4ff" .. (SmartHideOptions["target"] and "ON" or "OFF"));
         print("Group mode: |cff9ed4ff" .. (SmartHideOptions["group"] and "ON" or "OFF"));
