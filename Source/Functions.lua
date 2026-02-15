@@ -5,6 +5,7 @@ local P = "player";
 local additionalFrames = {
     EssentialCooldownViewer,
     UtilityCooldownViewer,
+    MageArcaneChargesFrame,
     WarlockPowerFrame,
     RuneFrame
 }
